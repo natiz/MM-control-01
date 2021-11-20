@@ -10,7 +10,7 @@ jobs:
       - name: Build Version
         run: |
           echo "::set-output name=commit_number::$(git rev-parse --short HEAD)"
-          echo "::set-output name=version::$(grep -oE 'fw_version = (\d+)' ./MM-control-01/version.h.in | grep -oE '(\d+)')"
+          echo "::set-output name=version::$(grep -oE 'fw_version = [0-9]+' ./MM-control-01/version.h.in | grep -oE '[0-9]+')"
         id: build-version
       - name: Compile Firmware
         run: ./build.sh
