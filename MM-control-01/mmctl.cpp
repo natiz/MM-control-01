@@ -72,7 +72,7 @@ bool feed_filament(bool timeout)
                 if (button_blanking <= button_blanking_limit) ++button_blanking;
             }
 
-            if (digitalRead(A1) == 1) ++finda_triggers;
+            if (readFinda() == 1) ++finda_triggers;
             if (finda_triggers >= finda_limit)
             {
                 loaded = true;
@@ -299,7 +299,7 @@ static bool checkOk()
 
     // filament in FINDA, let's try to unload it
     set_pulley_dir_pull();
-    if (digitalRead(A1) == 1)
+    if (readFinda() == 1)
     {
         _steps = 3000;
         _endstop_hit = 0;
@@ -307,12 +307,12 @@ static bool checkOk()
         {
             do_pulley_step();
             delayMicroseconds(3000);
-            if (digitalRead(A1) == 0) _endstop_hit++;
+            if (readFinda() == 0) _endstop_hit++;
             _steps--;
         } while (_steps > 0 && _endstop_hit < 50);
     }
 
-    if (digitalRead(A1) == 0)
+    if (readFinda() == 0)
     {
         // looks ok, load filament to FINDA
         set_pulley_dir_push();
@@ -323,7 +323,7 @@ static bool checkOk()
         {
             do_pulley_step();
             delayMicroseconds(3000);
-            if (digitalRead(A1) == 1) _endstop_hit++;
+            if (readFinda() == 1) _endstop_hit++;
             _steps--;
         } while (_steps > 0 && _endstop_hit < 50);
 
@@ -393,15 +393,15 @@ void load_filament_withSensor(bool disengageIdler)
         do_pulley_step();
         _loadSteps++;
         delayMicroseconds(5500);
-    } while (digitalRead(A1) == 0 && _loadSteps < 1500);
+    } while (readFinda() == 0 && _loadSteps < 1500);
 
 
     // filament did not arrived at FINDA, let's try to correct that
-    if (digitalRead(A1) == 0)
+    if (readFinda() == 0)
     {
         for (int i = 6; i > 0; i--)
         {
-            if (digitalRead(A1) == 0)
+            if (readFinda() == 0)
             {
                 // attempt to correct
                 set_pulley_dir_pull();
@@ -418,14 +418,14 @@ void load_filament_withSensor(bool disengageIdler)
                     do_pulley_step();
                     _loadSteps++;
                     delayMicroseconds(4000);
-                    if (digitalRead(A1) == 1) _endstop_hit++;
+                    if (readFinda() == 1) _endstop_hit++;
                 } while (_endstop_hit<100 && _loadSteps < 500);
             }
         }
     }
 
     // still not at FINDA, error on loading, let's wait for user input
-    if (digitalRead(A1) == 0)
+    if (readFinda() == 0)
     {
         bool _continue = false;
         bool _isOk = false;
@@ -489,7 +489,7 @@ void load_filament_withSensor(bool disengageIdler)
             do_pulley_step();
             _loadSteps++;
             delayMicroseconds(5500);
-        } while (digitalRead(A1) == 0 && _loadSteps < 1500);
+        } while (readFinda() == 0 && _loadSteps < 1500);
         // ?
     }
     else
@@ -511,7 +511,7 @@ void unload_filament_withSensor()
 
     motion_engage_idler(); // if idler is in parked position un-park him get in contact with filament
 
-    if (digitalRead(A1))
+    if (readFinda())
     {
         motion_unload_to_finda();
     }
@@ -536,11 +536,11 @@ void unload_filament_withSensor()
 
 
     // FINDA is still sensing filament, let's try to unload it once again
-    if (digitalRead(A1) == 1)
+    if (readFinda() == 1)
     {
         for (int i = 6; i > 0; i--)
         {
-            if (digitalRead(A1) == 1)
+            if (readFinda() == 1)
             {
                 set_pulley_dir_push();
                 for (int i = 150; i > 0; i--)
@@ -557,7 +557,7 @@ void unload_filament_withSensor()
                     do_pulley_step();
                     _steps--;
                     delayMicroseconds(3000);
-                    if (digitalRead(A1) == 0) _endstop_hit++;
+                    if (readFinda() == 0) _endstop_hit++;
                 } while (_endstop_hit < 100 && _steps > 0);
             }
             delay(100);
@@ -568,7 +568,7 @@ void unload_filament_withSensor()
 
 
     // error, wait for user input
-    if (digitalRead(A1) == 1)
+    if (readFinda() == 1)
     {
         bool _continue = false;
         bool _isOk = false;

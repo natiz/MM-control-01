@@ -138,7 +138,7 @@ static void unload_to_finda()
         }
 
         delayMicroseconds(delay);
-        if (digitalRead(A1) == 0) _endstop_hit++;
+        if (readFinda() == 0) _endstop_hit++;
 
     }
 }
@@ -201,7 +201,7 @@ void motion_unload_to_finda()
     for (uint8_t tr = 0; tr <= tries; ++tr)
     {
         unload_to_finda();
-        if (tmc2130_read_gstat() && digitalRead(A1) == 1)
+        if (tmc2130_read_gstat() && readFinda() == 1)
         {
             if (tries == tr) unrecoverable_error();
             drive_error();

@@ -1,0 +1,19 @@
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Version
+        run: echo "::set-output name=commit_number::$(git rev-parse --short HEAD)"; echo "::set-output name=version::$(grep -oE 'fw_version = (\d+)' MM-control-01/version.h.in | grep -oE '(\d+)')"
+        id: build-version
+      - name: Compile Firmware
+        run: ./build.sh
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: MM-control-01_${{ steps.build-info.outputs.version }}_${{ steps.build-info.outputs.commit_number }}.hex
+          path: ../MM-control-01-build/MM-control-01.hex

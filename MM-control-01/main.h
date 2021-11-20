@@ -5,6 +5,14 @@
 #include <inttypes.h>
 #include <stdio.h>
 
+#define FINDA_NPN_NO 1
+
+#if (FINDA_NPN_NO == 1)
+#define readFinda() (!digitalRead(A1))
+#else
+#define readFinda() digitalRead(A1)
+#endif
+
 void manual_extruder_selector();
 void unrecoverable_error();
 void drive_error();

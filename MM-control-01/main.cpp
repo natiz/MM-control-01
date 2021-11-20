@@ -133,7 +133,7 @@ void signal_ok_after_load_failure()
 //! @retval false not present any more
 bool filament_presence_signaler()
 {
-    if (digitalRead(A1) == 1)
+    if (readFinda() == 1)
     {
         signal_filament_present();
         return true;
@@ -170,11 +170,11 @@ bool filament_presence_signaler()
 
 void check_filament_not_present()
 {
-    while (digitalRead(A1) == 1)
+    while (readFinda() == 1)
     {
         while (Btn::right != buttonPressed())
         {
-            if (digitalRead(A1) == 1)
+            if (readFinda() == 1)
             {
                 signal_filament_present();
             }
@@ -295,7 +295,7 @@ void setup()
         motion_set_idler(filament);
     }
 
-	if (digitalRead(A1) == 1) isFilamentLoaded = true;
+	if (readFinda() == 1) isFilamentLoaded = true;
 
 }
 
@@ -516,7 +516,7 @@ void process_commands(FILE* inout)
 		else if (sscanf_P(line, PSTR("P%d"), &value) > 0)
 		{
 			if (value == 0) //! P0 Read finda
-				fprintf_P(inout, PSTR("%dok\n"), digitalRead(A1));
+				fprintf_P(inout, PSTR("%dok\n"), readFinda());
 		}
 		else if (sscanf_P(line, PSTR("S%d"), &value) > 0)
 		{
@@ -585,4 +585,3 @@ void process_commands(FILE* inout)
 	{ //nothing received
 	}
 }
-
