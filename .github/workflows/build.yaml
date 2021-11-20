@@ -12,8 +12,10 @@ jobs:
         id: build-version
       - name: Compile Firmware
         run: ./build.sh
+      - name: Move Artifact
+        run: mkdir -p dist; mv ../MM-control-01-build/MM-control-01.hex dist
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: MM-control-01_${{ steps.build-info.outputs.version }}_${{ steps.build-info.outputs.commit_number }}.hex
-          path: MM-control-01.hex
+          name: MM-control-01_${{ steps.build-version.outputs.version }}_${{ steps.build-version.outputs.commit_number }}.hex
+          path: dist
