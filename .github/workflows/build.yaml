@@ -8,7 +8,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build Version
-        run: echo "::set-output name=commit_number::$(git rev-parse --short HEAD)"; echo "::set-output name=version::$(grep -oE 'fw_version = (\d+)' MM-control-01/version.h.in | grep -oE '(\d+)')"
+        run: |
+          echo "::set-output name=commit_number::$(git rev-parse --short HEAD)"
+          echo "::set-output name=version::$(grep -oE 'fw_version = (\d+)' MM-control-01/version.h.in | grep -oE '(\d+)')"
         id: build-version
       - name: Compile Firmware
         run: ./build.sh
