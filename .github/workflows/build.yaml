@@ -15,7 +15,7 @@ jobs:
       - name: Compile Firmware
         run: ./build.sh
       - name: Move Artifact
-        run: mkdir -p dist; mv ../MM-control-01-build/MM-control-01.hex dist
+        run: mkdir -p dist; mv ../MM-control-01-build/MM-control-01.hex dist/MM-control-01_${{ steps.build-version.outputs.version }}_${{ steps.build-version.outputs.commit_number }}.hex
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
